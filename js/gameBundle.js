@@ -2425,16 +2425,40 @@ class Game {
     resetNewGame() {
         saveService.clear();
         this.isGameOver = false;
+        this.isMovementLocked = false;
         document.getElementById('gameover-modal').classList.add('hidden');
+
+        // Close any open modals
+        document.querySelectorAll('.overlay-panel').forEach(p => {
+            if (p.id !== 'campaign-select') p.classList.add('hidden');
+        });
+
         this.currentModuleIndex = 0;
         this.currentStageIndex = 0;
         this.activeCampaignId = 'campaign-english';
         HISTORY_CAMPAIGN.unlocked = false;
 
+        // Reset map to Stage 1
+        this.map = MAPS_DATA['zone-stage-1'];
+
+        // Reset player and companion to valid Stage 1 spawn point
         this.player = new Player(450, 360);
         this.companion = new Companion(400, 360);
+
+        // Reset all game state
+        this.projectiles = [];
+        this.floatingTexts = [];
+        this.beams = [];
+        this.screenShakeTimer = 0;
+
         this.restorationSystem.restorationPct = 0;
         this.hud.updateRestoration(0);
+        this.hud.updateShardsCount(0, 0);
+
+        // Reset camera to player position
+        this.camera.x = 0;
+        this.camera.y = 0;
+
         this.loadStageData();
         this.start();
     }
