@@ -79,6 +79,9 @@ class Input {
         window.addEventListener('keydown', (e) => {
             if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
 
+            // Prevent default for game keys (Tab focus, Space scroll)
+            if (e.code === 'Tab' || e.code === 'Space') e.preventDefault();
+
             const key = e.code;
             if (!this.keys[key]) {
                 this.pressed[key] = true;
@@ -2279,7 +2282,7 @@ class Game {
                 { speaker: 'Trưởng Làng Lexia', avatar: 'kaelen', text: 'Các màn sau quái vật sẽ đông hơn và mạnh dần! Thu thập toàn bộ Mảnh Tri Thức để đủ sức qua cửa!' }
             ]),
             new Npc('npc-su', 600, 360, 'Sử', 'Thiếu Niên Việt Nam', 'su', [
-                { speaker: 'Sử', avatar: 'su', text: 'Kaelen! Độ khó tăng dần từ Màn 1 đến Màn 4! Dùng [J], [1], [2], [3] tiêu diệt từng tên một!' }
+                { speaker: 'Sử', avatar: 'su', text: 'Kaelen! Độ khó tăng dần từ Màn 1 đến Màn 4! Dùng [Space] tấn công, [Q] Sét, [E] Băng, [R] Lửa tiêu diệt từng tên một!' }
             ])
         ];
     }
@@ -2491,13 +2494,13 @@ class Game {
             this.player.update(this.input, this.map.grid, this.map.cols, this.map.rows, this.map.tileSize);
             this.companion.followLeader(this.player, 12);
 
-            if (this.input.isPressed('ShiftLeft') || this.input.isPressed('ShiftRight') || this.input.isPressed('KeyK')) {
+            if (this.input.isPressed('ShiftLeft') || this.input.isPressed('ShiftRight')) {
                 this.player.performDash(this.map);
             }
-            if (this.input.isPressed('KeyJ')) this.castSkill('standard');
-            if (this.input.isPressed('Digit1')) this.castSkill('lightning');
-            if (this.input.isPressed('Digit2')) this.castSkill('frost');
-            if (this.input.isPressed('Digit3')) this.castSkill('firestorm');
+            if (this.input.isPressed('Space') || this.input.isPressed('KeyJ')) this.castSkill('standard');
+            if (this.input.isPressed('KeyQ')) this.castSkill('lightning');
+            if (this.input.isPressed('KeyE')) this.castSkill('frost');
+            if (this.input.isPressed('KeyR')) this.castSkill('firestorm');
 
             this.enemies.forEach(enemy => {
                 const shotInfo = enemy.update(this.map.grid, this.map.cols, this.map.rows, this.map.tileSize, this.player);
@@ -2578,7 +2581,7 @@ class Game {
 
             this.interactionSystem.update(this.player, this.shards, this.npcs, this.portals, this.enemies);
 
-            if (this.input.isPressed('KeyE')) {
+            if (this.input.isPressed('KeyF')) {
                 const active = this.interactionSystem.activeTarget;
                 if (active) {
                     if (active.type === 'portal') {
@@ -2592,16 +2595,15 @@ class Game {
             }
 
             if (this.input.isPressed('KeyI')) window.toggleJournal();
-            if (this.input.isPressed('KeyQ')) window.toggleQuestModal();
             if (this.input.isPressed('KeyC')) window.toggleChronicleModal();
-            if (this.input.isPressed('KeyP')) window.toggleProgressModal();
+            if (this.input.isPressed('Tab')) { window.toggleProgressModal(); }
             if (this.input.isPressed('Escape')) {
                 document.querySelectorAll('.overlay-panel').forEach(p => {
                     if (p.id !== 'campaign-select' && p.id !== 'gameover-modal') p.classList.add('hidden');
                 });
             }
         } else {
-            if (this.dialogueSystem.isOpen && (this.input.isPressed('KeyE') || this.input.isPressed('Space'))) {
+            if (this.dialogueSystem.isOpen && (this.input.isPressed('KeyF') || this.input.isPressed('Space'))) {
                 this.dialogueSystem.advance();
             }
         }
@@ -2691,17 +2693,17 @@ class Game {
         const cdDash = Math.ceil(this.player.cdDash / 60);
 
         const el1 = document.getElementById('vbtn-skill1-cd');
-        if (el1) el1.innerText = cd1 > 0 ? `${cd1}s` : '1';
+        if (el1) el1.innerText = cd1 > 0 ? `${cd1}s` : 'Q';
         const el2 = document.getElementById('vbtn-skill2-cd');
-        if (el2) el2.innerText = cd2 > 0 ? `${cd2}s` : '2';
+        if (el2) el2.innerText = cd2 > 0 ? `${cd2}s` : 'E';
         const el3 = document.getElementById('vbtn-skill3-cd');
-        if (el3) el3.innerText = cd3 > 0 ? `${cd3}s` : '3';
+        if (el3) el3.innerText = cd3 > 0 ? `${cd3}s` : 'R';
         const elDash = document.getElementById('vbtn-dash-cd');
-        if (elDash) elDash.innerText = cdDash > 0 ? `${cdDash}s` : 'K';
+        if (elDash) elDash.innerText = cdDash > 0 ? `${cdDash}s` : '⇧';
 
         this.ctx.fillStyle = '#ffffff';
         this.ctx.font = '12px VT323';
-        this.ctx.fillText(`[J] Bắn (5MP) | [1] Sét ${cd1>0?`(${cd1}s)`:'READY'} | [2] Băng ${cd2>0?`(${cd2}s)`:'READY'} | [3] Lửa ${cd3>0?`(${cd3}s)`:'READY'} | [Shift] Dash ${cdDash>0?`(${cdDash}s)`:'READY'}`, 20, 528);
+        this.ctx.fillText(`[Space] Bắn | [Q] Sét ${cd1>0?`(${cd1}s)`:'OK'} | [E] Băng ${cd2>0?`(${cd2}s)`:'OK'} | [R] Lửa ${cd3>0?`(${cd3}s)`:'OK'} | [Shift] Dash ${cdDash>0?`(${cdDash}s)`:'OK'}`, 20, 528);
 
         this.ctx.restore();
     }

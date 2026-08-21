@@ -52,31 +52,31 @@
             <div class="virtual-actions-container">
                 <!-- Skill Row -->
                 <div class="skills-row">
-                    <button id="vbtn-skill1" class="btn-skill-round skill-lightning" title="Chiêu [1]: Sét">
+                    <button id="vbtn-skill1" class="btn-skill-round skill-lightning" title="Chiêu [Q]: Sét">
                         <span class="skill-icon">⚡</span>
-                        <span id="vbtn-skill1-cd" class="skill-label">1</span>
+                        <span id="vbtn-skill1-cd" class="skill-label">Q</span>
                     </button>
-                    <button id="vbtn-skill2" class="btn-skill-round skill-frost" title="Chiêu [2]: Băng">
+                    <button id="vbtn-skill2" class="btn-skill-round skill-frost" title="Chiêu [E]: Băng">
                         <span class="skill-icon">❄️</span>
-                        <span id="vbtn-skill2-cd" class="skill-label">2</span>
+                        <span id="vbtn-skill2-cd" class="skill-label">E</span>
                     </button>
-                    <button id="vbtn-skill3" class="btn-skill-round skill-fire" title="Chiêu [3]: Bão Lửa">
+                    <button id="vbtn-skill3" class="btn-skill-round skill-fire" title="Chiêu [R]: Bão Lửa">
                         <span class="skill-icon">🔥</span>
-                        <span id="vbtn-skill3-cd" class="skill-label">3</span>
+                        <span id="vbtn-skill3-cd" class="skill-label">R</span>
                     </button>
                     <button id="vbtn-dash" class="btn-skill-round skill-dash" title="Lướt Dash [Shift]">
                         <span class="skill-icon">💨</span>
-                        <span id="vbtn-dash-cd" class="skill-label">K</span>
+                        <span id="vbtn-dash-cd" class="skill-label">⇧</span>
                     </button>
                 </div>
 
                 <!-- Main Action Row -->
                 <div class="actions-row">
-                    <button id="vbtn-interact" class="btn-action-round action-interact" title="Tương tác [E]">
+                    <button id="vbtn-interact" class="btn-action-round action-interact" title="Tương tác [F]">
                         <span class="action-icon">📜</span>
-                        <span class="action-label">Interact</span>
+                        <span class="action-label">Talk [F]</span>
                     </button>
-                    <button id="vbtn-attack" class="btn-action-round action-attack-main" title="Bắn phép [J]">
+                    <button id="vbtn-attack" class="btn-action-round action-attack-main" title="Bắn phép [Space]">
                         <span class="action-icon">🔮</span>
                         <span class="action-label">ATTACK</span>
                     </button>
@@ -93,7 +93,7 @@
                 <p>Thế giới Lexia đang bị Đại Lãng Quên xâm chiếm! Nhàn Nhã Hội (Order of Lethargy) đã phân rã Cội Nguồn Lexaris thành 8 Mảnh Tri Thức rải rác khắp các vùng đất.</p>
                 <br>
                 <p>🎮 <b>Vòng lặp cốt lõi (Core Loop):</b></p>
-                <p><b>Explore (WASD)</b> → <b>Rune Dash ([Shift])</b> → <b>Elemental Combo ([1],[2],[3])</b> → <b>Learn ([E])</b> → <b>Restore</b> → <b>Progress!</b></p>
+                <p><b>Explore (WASD)</b> → <b>Rune Dash ([Shift])</b> → <b>Elemental Combo ([Q],[E],[R])</b> → <b>Interact ([F])</b> → <b>Attack ([Space])</b> → <b>Progress!</b></p>
             </div>
 
             <div style="display: flex; gap: 16px; margin-top: 10px;">
@@ -184,7 +184,7 @@
                 <span id="speaker-name">Tên Nhân Vật</span>
             </div>
             <div id="dialogue-text" class="dialogue-content">Nội dung hội thoại...</div>
-            <div class="dialogue-prompt">Bấm [Space] hoặc [Click] để tiếp tục ▼</div>
+            <div class="dialogue-prompt">Bấm [F] hoặc [Space] hoặc [Click] để tiếp tục ▼</div>
         </div>
 
         <!-- UI Overlay for Echo Resonance Battle Puzzle -->
@@ -209,8 +209,8 @@
 
         <!-- Controls HUD Overlay -->
         <div id="hud-controls">
-            <span>🎮 WASD: Move | 🔮 [J]: Attack | ⚡ [1]: Lightning | ❄️ [2]: Frost | 🔥 [3]: Fire | 💨 [Shift/K]: Dash | 📜 [E]: Interact</span>
-            <span>📜 [I]: Journal | ⚔️ [Q]: Quests | 🇻🇳 [C]: Chronicle | 📊 [P]: Progress | ✖ [Esc]: Close Modal</span>
+            <span>🎮 WASD: Move | 🔮 [Space]: Attack | ⚡ [Q]: Sét | ❄️ [E]: Băng | 🔥 [R]: Lửa | 💨 [Shift]: Dash | 📜 [F]: Interact</span>
+            <span>📜 [I]: Journal | 🇻🇳 [C]: Chronicle | 📊 [Tab]: Progress | ✖ [Esc]: Close</span>
         </div>
     </div>
 

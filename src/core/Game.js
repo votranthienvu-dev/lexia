@@ -298,13 +298,13 @@ export class Game {
             this.player.update(this.input, this.map.grid, this.map.cols, this.map.rows, this.map.tileSize);
             this.companion.followLeader(this.player, 12);
 
-            if (this.input.isPressed('ShiftLeft') || this.input.isPressed('ShiftRight') || this.input.isPressed('KeyK')) {
+            if (this.input.isPressed('ShiftLeft') || this.input.isPressed('ShiftRight')) {
                 this.player.performDash(this.map);
             }
-            if (this.input.isPressed('KeyJ')) this.castSkill('standard');
-            if (this.input.isPressed('Digit1')) this.castSkill('lightning');
-            if (this.input.isPressed('Digit2')) this.castSkill('frost');
-            if (this.input.isPressed('Digit3')) this.castSkill('firestorm');
+            if (this.input.isPressed('Space') || this.input.isPressed('KeyJ')) this.castSkill('standard');
+            if (this.input.isPressed('KeyQ')) this.castSkill('lightning');
+            if (this.input.isPressed('KeyE')) this.castSkill('frost');
+            if (this.input.isPressed('KeyR')) this.castSkill('firestorm');
 
             this.enemies.forEach(enemy => {
                 const shotInfo = enemy.update(this.map.grid, this.map.cols, this.map.rows, this.map.tileSize, this.player);
@@ -385,7 +385,7 @@ export class Game {
 
             this.interactionSystem.update(this.player, this.shards, this.npcs, this.portals, this.enemies);
 
-            if (this.input.isPressed('KeyE')) {
+            if (this.input.isPressed('KeyF')) {
                 const active = this.interactionSystem.activeTarget;
                 if (active) {
                     if (active.type === 'portal') {
@@ -401,14 +401,14 @@ export class Game {
             if (this.input.isPressed('KeyI')) window.toggleJournal();
             if (this.input.isPressed('KeyQ')) window.toggleQuestModal();
             if (this.input.isPressed('KeyC')) window.toggleChronicleModal();
-            if (this.input.isPressed('KeyP')) window.toggleProgressModal();
+            if (this.input.isPressed('Tab')) window.toggleProgressModal();
             if (this.input.isPressed('Escape')) {
                 document.querySelectorAll('.overlay-panel').forEach(p => {
                     if (p.id !== 'campaign-select' && p.id !== 'gameover-modal') p.classList.add('hidden');
                 });
             }
         } else {
-            if (this.dialogueSystem.isOpen && (this.input.isPressed('KeyE') || this.input.isPressed('Space'))) {
+            if (this.dialogueSystem.isOpen && (this.input.isPressed('KeyF') || this.input.isPressed('Space'))) {
                 this.dialogueSystem.advance();
             }
         }
