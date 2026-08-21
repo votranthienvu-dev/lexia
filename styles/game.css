@@ -1,0 +1,628 @@
+#game-container {
+    position: relative;
+    width: 960px;
+    height: 540px;
+    max-width: 100vw;
+    max-height: 100vh;
+    aspect-ratio: 16 / 9;
+    border: 4px solid #334155;
+    box-shadow: 0 0 35px rgba(0, 0, 0, 0.95), 0 0 45px rgba(0, 255, 245, 0.2);
+    background-color: #0f172a;
+    overflow: hidden;
+    touch-action: none;
+}
+
+#gameCanvas {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+/* Top HUD Bar */
+#hud-top {
+    position: absolute;
+    top: 10px;
+    left: 14px;
+    right: 14px;
+    height: 42px;
+    background: rgba(15, 23, 42, 0.92);
+    border: 2px solid #00fff5;
+    border-radius: 6px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 16px;
+    z-index: 40;
+}
+
+.hud-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.hud-label {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 10px;
+    color: #00fff5;
+    text-shadow: 1px 1px #000;
+}
+
+.tree-progress-container {
+    width: 160px;
+    height: 16px;
+    background: #1e293b;
+    border: 1px solid #fff;
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.tree-progress-fill {
+    width: 0%;
+    height: 100%;
+    background: linear-gradient(to right, #6c5ce7, #00cec9, #ffeaa7);
+    transition: width 0.5s ease-in-out;
+}
+
+#tree-pct-text {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 10px;
+    color: #ffeaa7;
+}
+
+.shards-badge {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 10px;
+    color: #ff7675;
+    background: #1e293b;
+    padding: 4px 10px;
+    border-radius: 4px;
+    border: 1px solid #ff7675;
+}
+
+.pixel-btn-hud {
+    font-family: 'Silkscreen', monospace;
+    font-size: 10px;
+    background: #6c5ce7;
+    color: #fff;
+    border: 1px solid #a29bfe;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: transform 0.15s, background 0.15s;
+}
+
+.pixel-btn-hud.gold { background: #d35400; border-color: #e67e22; }
+.pixel-btn-hud.blue { background: #0984e3; border-color: #74b9ff; }
+.pixel-btn-hud.red { background: #c0392b; border-color: #e74c3c; }
+
+.pixel-btn-hud:hover {
+    filter: brightness(1.2);
+    transform: scale(1.05);
+}
+
+/* Modal Overlay Panels */
+.overlay-panel {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(15, 23, 42, 0.96);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    padding: 30px;
+    text-align: center;
+}
+
+.modal-box {
+    background: #0f172a;
+    border: 4px solid #6c5ce7;
+    border-radius: 8px;
+    width: 780px;
+    height: 440px;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    box-shadow: 0 0 30px rgba(108, 92, 231, 0.45);
+}
+
+.modal-box.quest-style { border-color: #d35400; }
+.modal-box.chronicle-style { border-color: #e74c3c; }
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid #6c5ce7;
+    padding-bottom: 10px;
+    margin-bottom: 14px;
+}
+
+.modal-header h2 {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 13px;
+    color: #ffeaa7;
+}
+
+.pixel-btn-close {
+    font-family: 'Silkscreen', monospace;
+    font-size: 11px;
+    background: #d63031;
+    color: #fff;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.modal-body {
+    flex-grow: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding-right: 6px;
+}
+
+.card-item {
+    background: #1e293b;
+    border: 2px solid #334155;
+    border-radius: 6px;
+    padding: 12px 16px;
+    text-align: left;
+}
+
+.card-item.active {
+    border-color: #00fff5;
+    background: rgba(0, 255, 245, 0.06);
+}
+
+.card-title {
+    font-family: 'Pixelify Sans', sans-serif;
+    font-size: 19px;
+    font-weight: 700;
+    color: #00fff5;
+    margin-bottom: 4px;
+}
+
+.card-desc {
+    font-size: 17px;
+    color: #cbd5e1;
+    line-height: 1.4;
+}
+
+/* Dialogue Box Overlay */
+#dialogue-box {
+    position: absolute;
+    bottom: 18px;
+    left: 24px;
+    right: 24px;
+    height: 140px;
+    background: rgba(15, 23, 42, 0.96);
+    border: 3px solid #00fff5;
+    border-radius: 6px;
+    z-index: 50;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 14px;
+    cursor: pointer;
+}
+
+.dialogue-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border-bottom: 1px solid #334155;
+    padding-bottom: 6px;
+}
+
+.portrait {
+    width: 32px;
+    height: 32px;
+    border-radius: 4px;
+    border: 2px solid #fff;
+}
+
+.portrait.kaelen { background-color: #4e54c8; }
+.portrait.lex { background-color: #00fff5; }
+.portrait.su { background-color: #ff9900; }
+.portrait.oblivitas { background-color: #800080; }
+
+#speaker-name {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 11px;
+    color: #f8b500;
+}
+
+.dialogue-content {
+    font-family: 'Pixelify Sans', sans-serif;
+    font-size: 20px;
+    line-height: 1.4;
+    color: #ffffff;
+    flex-grow: 1;
+    margin-top: 8px;
+}
+
+.dialogue-prompt {
+    font-family: 'Silkscreen', monospace;
+    font-size: 11px;
+    color: #00fff5;
+    text-align: right;
+    animation: blink 1s infinite;
+}
+
+@keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+}
+
+/* Lesson / Quiz Panel Overlay */
+.lesson-overlay {
+    position: absolute;
+    top: 50px;
+    left: 60px;
+    right: 60px;
+    bottom: 40px;
+    background: rgba(15, 23, 42, 0.97);
+    border: 4px solid #ff0055;
+    border-radius: 8px;
+    z-index: 60;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    padding: 18px;
+}
+
+.lesson-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid #ff0055;
+    padding-bottom: 10px;
+}
+
+.lesson-title {
+    font-size: 12px;
+    color: #ff0055;
+    font-family: 'Press Start 2P', monospace;
+}
+
+.lesson-question {
+    font-family: 'Pixelify Sans', sans-serif;
+    font-size: 21px;
+    color: #ffff00;
+    line-height: 1.45;
+    background: #0f172a;
+    padding: 12px;
+    border-radius: 4px;
+    border-left: 4px solid #00fff5;
+}
+
+.lesson-options {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.lesson-btn {
+    background: #1e293b;
+    border: 2px solid #334155;
+    color: #fff;
+    font-family: 'Pixelify Sans', sans-serif;
+    font-size: 19px;
+    padding: 10px 14px;
+    text-align: left;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background 0.2s, border-color 0.2s;
+}
+
+.lesson-btn:hover {
+    background: #0f3460;
+    border-color: #00fff5;
+    color: #00fff5;
+}
+
+.lesson-feedback {
+    font-family: 'Pixelify Sans', sans-serif;
+    font-size: 19px;
+    padding: 10px;
+    border-radius: 4px;
+    text-align: center;
+}
+
+.lesson-feedback.correct {
+    background: rgba(0, 255, 128, 0.2);
+    color: #00ff80;
+    border: 1px solid #00ff80;
+}
+
+.lesson-feedback.wrong {
+    background: rgba(255, 0, 85, 0.2);
+    color: #ff0055;
+    border: 1px solid #ff0055;
+}
+
+/* Controls Overlay Hints */
+#hud-controls {
+    position: absolute;
+    bottom: 6px;
+    left: 140px;
+    right: 320px;
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    font-family: 'Silkscreen', monospace;
+    font-size: 10px;
+    color: #cbd5e1;
+    background: rgba(15, 23, 42, 0.88);
+    padding: 4px 10px;
+    border-radius: 4px;
+    pointer-events: none;
+    z-index: 20;
+}
+
+.pixel-title {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 26px;
+    color: #00fff5;
+    text-shadow: 3px 3px #ff007f;
+    margin-bottom: 10px;
+}
+
+.pixel-subtitle {
+    font-family: 'Pixelify Sans', sans-serif;
+    font-size: 22px;
+    color: #cbd5e1;
+    margin-bottom: 24px;
+}
+
+.intro-box {
+    background: #1e293b;
+    border: 2px solid #00fff5;
+    padding: 18px 24px;
+    border-radius: 8px;
+    max-width: 720px;
+    font-family: 'Pixelify Sans', sans-serif;
+    font-size: 19px;
+    line-height: 1.45;
+    color: #f1f5f9;
+    text-align: left;
+    margin-bottom: 24px;
+}
+
+.pixel-btn.green-large {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 12px;
+    padding: 14px 24px;
+    background: #00b894;
+    border: 2px solid #55efc4;
+    color: #fff;
+    cursor: pointer;
+    border-radius: 6px;
+    transition: filter 0.2s, transform 0.2s;
+}
+
+.pixel-btn.green-large:hover {
+    filter: brightness(1.2);
+    transform: scale(1.05);
+}
+
+/* Virtual On-Screen Controls Layout */
+#virtual-controls {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 35;
+}
+
+/* Bottom Left: Virtual D-Pad */
+.virtual-dpad-container {
+    position: absolute;
+    bottom: 20px;
+    left: 18px;
+    width: 110px;
+    height: 110px;
+    background: rgba(15, 23, 42, 0.85);
+    border: 2px solid #00fff5;
+    border-radius: 50%;
+    pointer-events: auto;
+    box-shadow: 0 0 15px rgba(0, 255, 245, 0.35);
+}
+
+.dpad-btn {
+    position: absolute;
+    width: 34px;
+    height: 34px;
+    background: #1e293b;
+    border: 1px solid #334155;
+    color: #00fff5;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    user-select: none;
+    border-radius: 6px;
+    transition: background 0.1s, transform 0.1s;
+}
+
+.dpad-btn:active, .dpad-btn.active {
+    background: #00fff5;
+    color: #0f172a;
+    transform: scale(0.92);
+}
+
+.dpad-up { top: 4px; left: 38px; }
+.dpad-down { bottom: 4px; left: 38px; }
+.dpad-left { top: 38px; left: 4px; }
+.dpad-right { top: 38px; right: 4px; }
+.dpad-center {
+    position: absolute;
+    top: 40px;
+    left: 40px;
+    font-size: 14px;
+    pointer-events: none;
+    opacity: 0.6;
+}
+
+/* Bottom Right: Virtual Action & Skill Buttons */
+.virtual-actions-container {
+    position: absolute;
+    bottom: 16px;
+    right: 18px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 8px;
+    pointer-events: auto;
+}
+
+.skills-row {
+    display: flex;
+    gap: 8px;
+}
+
+.actions-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.btn-skill-round {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: #1e293b;
+    border: 2px solid #6c5ce7;
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 0 10px rgba(0,0,0,0.5);
+    transition: transform 0.1s, filter 0.15s;
+    user-select: none;
+}
+
+.btn-skill-round:active {
+    transform: scale(0.9);
+}
+
+.skill-lightning { border-color: #f1c40f; background: rgba(241, 196, 15, 0.2); }
+.skill-frost { border-color: #74b9ff; background: rgba(116, 185, 255, 0.2); }
+.skill-fire { border-color: #ff7675; background: rgba(255, 118, 117, 0.2); }
+.skill-dash { border-color: #55efc4; background: rgba(85, 239, 196, 0.2); }
+
+.skill-icon { font-size: 15px; line-height: 1; }
+.skill-label { font-family: 'Press Start 2P', monospace; font-size: 8px; color: #ffeaa7; margin-top: 1px; }
+
+.btn-action-round {
+    border-radius: 20px;
+    background: #1e293b;
+    border: 2px solid #334155;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    cursor: pointer;
+    box-shadow: 0 0 12px rgba(0,0,0,0.6);
+    transition: transform 0.1s, filter 0.15s;
+    user-select: none;
+}
+
+.btn-action-round:active {
+    transform: scale(0.92);
+}
+
+.action-interact {
+    padding: 8px 14px;
+    border-color: #a29bfe;
+    background: rgba(108, 92, 231, 0.25);
+    font-family: 'Silkscreen', monospace;
+    font-size: 10px;
+}
+
+.action-attack-main {
+    width: 62px;
+    height: 62px;
+    border-radius: 50%;
+    border-color: #00fff5;
+    background: linear-gradient(135deg, #0984e3, #6c5ce7);
+    box-shadow: 0 0 18px rgba(0, 255, 245, 0.5);
+    flex-direction: column;
+}
+
+.action-attack-main .action-icon { font-size: 20px; }
+.action-attack-main .action-label { font-family: 'Press Start 2P', monospace; font-size: 7px; color: #fff; margin-top: 2px; }
+
+.modal-box.progress-style {
+    border-color: #00fff5;
+    box-shadow: 0 0 30px rgba(0, 255, 245, 0.45);
+}
+
+.hidden { display: none !important; }
+
+/* Mobile & Tablet Responsive Media Queries */
+@media (max-width: 768px) {
+    #hud-top {
+        height: 36px;
+        padding: 0 8px;
+        top: 4px;
+        left: 4px;
+        right: 4px;
+    }
+    .hud-label {
+        font-size: 8px;
+    }
+    .pixel-btn-hud {
+        font-size: 8px;
+        padding: 3px 6px;
+    }
+    .tree-progress-container {
+        width: 80px;
+        height: 12px;
+    }
+    #shards-counter {
+        font-size: 8px;
+        padding: 2px 6px;
+    }
+    .virtual-dpad-container {
+        bottom: 8px;
+        left: 8px;
+        transform: scale(0.85);
+        transform-origin: bottom left;
+    }
+    .virtual-actions-container {
+        bottom: 6px;
+        right: 8px;
+        transform: scale(0.85);
+        transform-origin: bottom right;
+    }
+    #hud-controls {
+        display: none !important;
+    }
+    .modal-box {
+        width: 95%;
+        height: 88%;
+        padding: 12px;
+    }
+    .intro-box {
+        font-size: 15px;
+        padding: 12px;
+    }
+    .pixel-title {
+        font-size: 18px;
+    }
+    .pixel-subtitle {
+        font-size: 14px;
+    }
+}

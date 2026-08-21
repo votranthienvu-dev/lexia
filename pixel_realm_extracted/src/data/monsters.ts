@@ -1,0 +1,153 @@
+import { Monster } from '../types/game';
+
+export const MONSTER_TEMPLATES: Record<string, Omit<Monster, 'id' | 'x' | 'y' | 'lastAttackTime' | 'isDead' | 'animFrame'>> = {
+  slime_green: {
+    typeId: 'slime_green',
+    name: 'Meadow Slime',
+    width: 24,
+    height: 24,
+    direction: 'down',
+    state: 'idle',
+    hp: 45,
+    maxHp: 45,
+    attack: 8,
+    defense: 2,
+    speed: 1.2,
+    expYield: 25,
+    goldYield: 6,
+    color: '#22c55e',
+    rarity: 'normal',
+    attackRange: 32,
+    aggroRange: 160,
+    attackCooldown: 1500,
+    loot: [
+      { itemId: 'monster_slime_gel', chance: 0.9, min: 1, max: 3 },
+      { itemId: 'potion_hp_small', chance: 0.25, min: 1, max: 1 }
+    ]
+  },
+  wolf_dire: {
+    typeId: 'wolf_dire',
+    name: 'Dire Shadow Wolf',
+    width: 28,
+    height: 28,
+    direction: 'down',
+    state: 'idle',
+    hp: 95,
+    maxHp: 95,
+    attack: 18,
+    defense: 6,
+    speed: 2.2,
+    expYield: 65,
+    goldYield: 15,
+    color: '#475569',
+    rarity: 'normal',
+    attackRange: 36,
+    aggroRange: 220,
+    attackCooldown: 1200,
+    loot: [
+      { itemId: 'monster_wolf_pelt', chance: 0.75, min: 1, max: 2 },
+      { itemId: 'apple_fresh', chance: 0.4, min: 1, max: 2 }
+    ]
+  },
+  goblin_scout: {
+    typeId: 'goblin_scout',
+    name: 'Goblin Pillager',
+    width: 24,
+    height: 28,
+    direction: 'down',
+    state: 'idle',
+    hp: 120,
+    maxHp: 120,
+    attack: 24,
+    defense: 8,
+    speed: 1.8,
+    expYield: 90,
+    goldYield: 28,
+    color: '#65a30d',
+    rarity: 'normal',
+    attackRange: 38,
+    aggroRange: 190,
+    attackCooldown: 1100,
+    loot: [
+      { itemId: 'ore_iron', chance: 0.6, min: 1, max: 3 },
+      { itemId: 'sword_novice', chance: 0.15, min: 1, max: 1 },
+      { itemId: 'potion_hp_small', chance: 0.4, min: 1, max: 2 }
+    ]
+  },
+  skeleton_warrior: {
+    typeId: 'skeleton_warrior',
+    name: 'Crypt Skeleton Guard',
+    width: 26,
+    height: 30,
+    direction: 'down',
+    state: 'idle',
+    hp: 180,
+    maxHp: 180,
+    attack: 32,
+    defense: 14,
+    speed: 1.4,
+    expYield: 150,
+    goldYield: 45,
+    color: '#cbd5e1',
+    rarity: 'normal',
+    attackRange: 40,
+    aggroRange: 200,
+    attackCooldown: 1400,
+    loot: [
+      { itemId: 'monster_bone', chance: 0.85, min: 1, max: 3 },
+      { itemId: 'shield_wooden', chance: 0.2, min: 1, max: 1 },
+      { itemId: 'ore_gold', chance: 0.35, min: 1, max: 2 }
+    ]
+  },
+  golem_obsidian: {
+    typeId: 'golem_obsidian',
+    name: 'Obsidian Earth Colossus',
+    width: 38,
+    height: 38,
+    direction: 'down',
+    state: 'idle',
+    hp: 350,
+    maxHp: 350,
+    attack: 48,
+    defense: 25,
+    speed: 1.0,
+    expYield: 280,
+    goldYield: 90,
+    color: '#334155',
+    rarity: 'elite',
+    attackRange: 46,
+    aggroRange: 180,
+    attackCooldown: 2000,
+    loot: [
+      { itemId: 'ore_mithril', chance: 0.7, min: 2, max: 4 },
+      { itemId: 'crystal_arcane', chance: 0.45, min: 1, max: 2 },
+      { itemId: 'armor_plate', chance: 0.12, min: 1, max: 1 }
+    ]
+  },
+  dragon_boss: {
+    typeId: 'dragon_boss',
+    name: 'Ignis, King of Embers',
+    width: 54,
+    height: 54,
+    direction: 'down',
+    state: 'idle',
+    hp: 850,
+    maxHp: 850,
+    attack: 75,
+    defense: 30,
+    speed: 1.5,
+    expYield: 1200,
+    goldYield: 500,
+    color: '#dc2626',
+    rarity: 'boss',
+    attackRange: 60,
+    aggroRange: 320,
+    attackCooldown: 1300,
+    loot: [
+      { itemId: 'crown_royal', chance: 0.4, min: 1, max: 1 },
+      { itemId: 'sword_radiant', chance: 0.35, min: 1, max: 1 },
+      { itemId: 'crystal_arcane', chance: 1.0, min: 4, max: 8 },
+      { itemId: 'ore_mithril', chance: 1.0, min: 8, max: 15 }
+    ]
+  }
+};

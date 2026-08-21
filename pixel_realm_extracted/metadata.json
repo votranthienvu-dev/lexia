@@ -1,0 +1,6 @@
+{
+  "name": "Pixel Realm RPG",
+  "description": "An immersive pixel art RPG adventure featuring detailed modular human character sprites, item equipment, map exploration, resource gathering, quests, and combat.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

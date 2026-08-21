@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LexiQuest: Echoes of Knowledge - 2D Active Action RPG Combo (60FPS)</title>
+    <link rel="stylesheet" href="styles/base.css">
+    <link rel="stylesheet" href="styles/game.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;600;700&family=Press+Start+2P&family=Silkscreen&family=VT323&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="game-container">
+        <!-- Top HUD Bar -->
+        <div id="hud-top">
+            <div class="hud-item" onclick="toggleProgressModal()" style="cursor: pointer;" title="Nhấp để xem Tiến Trình">
+                <span class="hud-label">🌳 LEXARIS:</span>
+                <div class="tree-progress-container">
+                    <div id="tree-progress-bar" class="tree-progress-fill"></div>
+                </div>
+                <span id="tree-pct-text">0%</span>
+            </div>
+
+            <div class="hud-item">
+                <span id="shards-counter-item" onclick="toggleProgressModal()" style="cursor: pointer; display: flex; align-items: center; gap: 6px;" title="Nhấp để xem Tiến Trình">
+                    <span class="hud-label">💎 Mảnh Tri Thức:</span>
+                    <span id="shards-counter" class="shards-badge">0 / 8</span>
+                </span>
+                <button onclick="toggleJournal()" class="pixel-btn-hud">📜 [I] Sổ Ký Ức</button>
+                <button onclick="toggleQuestModal()" class="pixel-btn-hud gold">⚔️ [Q] Nhiệm Vụ</button>
+                <button onclick="toggleChronicleModal()" class="pixel-btn-hud red">🇻🇳 [C] Sử Chronicle</button>
+                <button onclick="toggleProgressModal()" class="pixel-btn-hud blue">📊 [P] Tiến Trình</button>
+            </div>
+        </div>
+
+        <!-- Main Canvas Viewport (960x540 px) -->
+        <canvas id="gameCanvas" width="960" height="540"></canvas>
+
+        <!-- On-Screen Action & Movement Touch Controls (Separate Left D-Pad & Right Skills/Actions) -->
+        <div id="virtual-controls">
+            <!-- Left Side: Movement D-Pad -->
+            <div class="virtual-dpad-container">
+                <button id="vbtn-up" class="dpad-btn dpad-up" title="Lên [W]">▲</button>
+                <button id="vbtn-left" class="dpad-btn dpad-left" title="Trái [A]">◀</button>
+                <div class="dpad-center">🎮</div>
+                <button id="vbtn-right" class="dpad-btn dpad-right" title="Phải [D]">▶</button>
+                <button id="vbtn-down" class="dpad-btn dpad-down" title="Xuống [S]">▼</button>
+            </div>
+
+            <!-- Right Side: Skills & Action Buttons Bar -->
+            <div class="virtual-actions-container">
+                <!-- Skill Row -->
+                <div class="skills-row">
+                    <button id="vbtn-skill1" class="btn-skill-round skill-lightning" title="Chiêu [1]: Sét">
+                        <span class="skill-icon">⚡</span>
+                        <span id="vbtn-skill1-cd" class="skill-label">1</span>
+                    </button>
+                    <button id="vbtn-skill2" class="btn-skill-round skill-frost" title="Chiêu [2]: Băng">
+                        <span class="skill-icon">❄️</span>
+                        <span id="vbtn-skill2-cd" class="skill-label">2</span>
+                    </button>
+                    <button id="vbtn-skill3" class="btn-skill-round skill-fire" title="Chiêu [3]: Bão Lửa">
+                        <span class="skill-icon">🔥</span>
+                        <span id="vbtn-skill3-cd" class="skill-label">3</span>
+                    </button>
+                    <button id="vbtn-dash" class="btn-skill-round skill-dash" title="Lướt Dash [Shift]">
+                        <span class="skill-icon">💨</span>
+                        <span id="vbtn-dash-cd" class="skill-label">K</span>
+                    </button>
+                </div>
+
+                <!-- Main Action Row -->
+                <div class="actions-row">
+                    <button id="vbtn-interact" class="btn-action-round action-interact" title="Tương tác [E]">
+                        <span class="action-icon">📜</span>
+                        <span class="action-label">Interact</span>
+                    </button>
+                    <button id="vbtn-attack" class="btn-action-round action-attack-main" title="Bắn phép [J]">
+                        <span class="action-icon">🔮</span>
+                        <span class="action-label">ATTACK</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Title Screen / Màn Hình Chờ Chọn Chơi Tiếp Hoặc Chơi Lại Từ Đầu -->
+        <div id="campaign-select" class="overlay-panel">
+            <h1 class="pixel-title">🌳 LEXIQUEST 🌳</h1>
+            <p class="pixel-subtitle">2D High-FPS Action Combo RPG (Rune Dash, Elemental Skills & Combo Multiplier)</p>
+
+            <div class="intro-box">
+                <p>Thế giới Lexia đang bị Đại Lãng Quên xâm chiếm! Nhàn Nhã Hội (Order of Lethargy) đã phân rã Cội Nguồn Lexaris thành 8 Mảnh Tri Thức rải rác khắp các vùng đất.</p>
+                <br>
+                <p>🎮 <b>Vòng lặp cốt lõi (Core Loop):</b></p>
+                <p><b>Explore (WASD)</b> → <b>Rune Dash ([Shift])</b> → <b>Elemental Combo ([1],[2],[3])</b> → <b>Learn ([E])</b> → <b>Restore</b> → <b>Progress!</b></p>
+            </div>
+
+            <div style="display: flex; gap: 16px; margin-top: 10px;">
+                <button onclick="continueGame()" class="pixel-btn green-large" style="background: #0984e3; border-color: #74b9ff;">▶️ CHƠI TIẾP (Load Save)</button>
+                <button onclick="startNewGame()" class="pixel-btn green-large" style="background: #d63031; border-color: #ff7675;">🔄 CHƠI LẠI TỪ ĐẦU (New Game)</button>
+            </div>
+        </div>
+
+        <!-- GameOver Screen / Màn Hình Khi Máu Về 0 Chơi Lại Từ Đầu -->
+        <div id="gameover-modal" class="overlay-panel hidden">
+            <h1 class="pixel-title" style="color: #ff0055; text-shadow: 3px 3px #000;">💀 GAME OVER 💀</h1>
+            <p class="pixel-subtitle" style="color: #ff7675;">Kaelen đã kiệt sức trước sự tấn công của Hội Nhàn Nhã!</p>
+
+            <div class="intro-box" style="border-color: #ff0055; text-align: center;">
+                <p>Máu (HP) của Kaelen đã về 0! Theo quy tắc sinh tồn phiêu lưu, cậu phải hồi phục sức mạnh và **CHƠI LẠI TỪ ĐẦU**!</p>
+            </div>
+
+            <button onclick="startNewGame()" class="pixel-btn green-large" style="background: #d63031; border-color: #ff7675; margin-top: 12px;">🔄 CHƠI LẠI TỪ ĐẦU (Restart Journey)</button>
+        </div>
+
+        <!-- Lore & Shard Journal Modal -->
+        <div id="journal-modal" class="overlay-panel hidden" onclick="if(event.target===this) toggleJournal()">
+            <div class="modal-box">
+                <div class="modal-header">
+                    <h2>📜 SỔ KÝ ỨC & CỔ TỰ RUNE LEXARIS</h2>
+                    <button onclick="toggleJournal()" class="pixel-btn-close">✖ Khép Sổ</button>
+                </div>
+                <div id="journal-content-list" class="modal-body">
+                    <!-- Dynamic list of shards & canon lore -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Quest Log Modal -->
+        <div id="quest-modal" class="overlay-panel hidden" onclick="if(event.target===this) toggleQuestModal()">
+            <div class="modal-box quest-style">
+                <div class="modal-header">
+                    <h2>⚔️ NHẬT KÝ NHIỆM VỤ (QUEST LOG)</h2>
+                    <button onclick="toggleQuestModal()" class="pixel-btn-close">✖ Đóng</button>
+                </div>
+                <div id="quest-content-list" class="modal-body">
+                    <div class="card-item active">
+                        <div class="card-title">🌟 Nhiệm Vụ Chính: Khôi Phục Cội Nguồn Lexaris</div>
+                        <div class="card-desc">Thu thập đủ 8 Mảnh Tri Thức rải rác khắp các vùng đất để thắp sáng Cội Nguồn Lexaris lên 100%.</div>
+                    </div>
+                    <div class="card-item">
+                        <div class="card-title">🇻🇳 Nhiệm Vụ Phụ: Hào Khí Non Sông cùng Sử</div>
+                        <div class="card-desc">Giải mã Mảnh Ký Ức Bạch Đằng Giang 938 & Điện Diên Hồng để giải cứu cõi Ký Ức Việt Nam khỏi Oblivitas.</div>
+                    </div>
+                    <div class="card-item">
+                        <div class="card-title">📜 Nhiệm Vụ Phụ: Cổ Tự Rune S-V-O cùng Lex</div>
+                        <div class="card-desc">Khôi phục các Rune Ngôn Từ để liên kết lại cấu trúc tri thức bị Nhàn Nhã Hội đánh gãy.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- History Chronicle Modal (Đại Sử Việt) -->
+        <div id="chronicle-modal" class="overlay-panel hidden" onclick="if(event.target===this) toggleChronicleModal()">
+            <div class="modal-box chronicle-style">
+                <div class="modal-header">
+                    <h2>🇻🇳 ĐẠI SỬ VIỆT - CHRONICLE KÝ ỨC</h2>
+                    <button onclick="toggleChronicleModal()" class="pixel-btn-close">✖ Đóng</button>
+                </div>
+                <div id="chronicle-content-list" class="modal-body">
+                    <!-- Dynamic list of history anchors & source references -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Lexaris Progress Modal (Màn Hình Tiến Trình) -->
+        <div id="progress-modal" class="overlay-panel hidden" onclick="if(event.target===this) toggleProgressModal()">
+            <div class="modal-box progress-style">
+                <div class="modal-header">
+                    <h2>📊 TIẾN TRÌNH KHÔI PHỤC CỘI NGUỒN LEXARIS</h2>
+                    <button onclick="toggleProgressModal()" class="pixel-btn-close">✖ Đóng</button>
+                </div>
+                <div id="progress-content-list" class="modal-body">
+                    <!-- Dynamic list of stage & shard progress -->
+                </div>
+            </div>
+        </div>
+
+        <!-- UI Overlay for Dialogue System -->
+        <div id="dialogue-box" class="pixel-box hidden">
+            <div class="dialogue-header">
+                <div id="avatar" class="portrait su"></div>
+                <span id="speaker-name">Tên Nhân Vật</span>
+            </div>
+            <div id="dialogue-text" class="dialogue-content">Nội dung hội thoại...</div>
+            <div class="dialogue-prompt">Bấm [Space] hoặc [Click] để tiếp tục ▼</div>
+        </div>
+
+        <!-- UI Overlay for Echo Resonance Battle Puzzle -->
+        <div id="battle-modal" class="pixel-box lesson-overlay hidden">
+            <div class="lesson-header">
+                <div class="lesson-title">⚡ ECHO RESONANCE TRIAL ⚡</div>
+                <div class="enemy-info">
+                    <span id="enemy-name">Mảnh Tri Thức Bị Niêm Phong</span>
+                </div>
+            </div>
+
+            <div id="battle-question" class="lesson-question">
+                Nội dung câu hỏi thử thách Rune...
+            </div>
+
+            <div id="battle-options" class="lesson-options">
+                <!-- Dynamic options generated by JS -->
+            </div>
+
+            <div id="battle-feedback" class="lesson-feedback hidden"></div>
+        </div>
+
+        <!-- Controls HUD Overlay -->
+        <div id="hud-controls">
+            <span>🎮 WASD: Move | 🔮 [J]: Attack | ⚡ [1]: Lightning | ❄️ [2]: Frost | 🔥 [3]: Fire | 💨 [Shift/K]: Dash | 📜 [E]: Interact</span>
+            <span>📜 [I]: Journal | ⚔️ [Q]: Quests | 🇻🇳 [C]: Chronicle | 📊 [P]: Progress | ✖ [Esc]: Close Modal</span>
+        </div>
+    </div>
+
+    <!-- Standalone Script Bundle (Direct File:// Protocol Compatibility without HTTP Server) -->
+    <script src="js/gameBundle.js"></script>
+</body>
+</html>
